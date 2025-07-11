@@ -13,6 +13,5 @@ async def root():
     return {"message": "Go to /docs"}
 
 @app.get("/search")
-async def search(url: str = Query(description="Enter a thaqalayn.net URL")):
-    response = find_hadith(url)
-    return JSONResponse(content=response)
+async def search(url: str = Query(description="Enter a thaqalayn.net/hadith URL. All books supported except for: Man la Yahduruhu al-Faqih, Kitab al-Duafa, Risalat al-Huquq, and Mujam al-Ahadith al-Mutabara.")):
+    return find_hadith(url)

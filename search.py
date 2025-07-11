@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi import HTTPException
 import pymongo
 import os
 import requests
@@ -25,7 +25,7 @@ def find_hadith(url):
                                 })
 
     if not hadith:
-        return HTTPException(status_code=404, detail="Hadith not found")
+        raise HTTPException(status_code=404, detail="Please enter a valid thaqalayn.net/hadith URL")
     
     return hadith
 
