@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
-from search import find_hadith
+from utils import find_hadith, get_chain
 
 app = FastAPI(
     title="Thaqalayn-Noor API",
@@ -15,3 +15,7 @@ async def root():
 @app.get("/search")
 async def search(url: str = Query(description="Enter a thaqalayn.net/hadith URL. All books supported except for: Man la Yahduruhu al-Faqih, Kitab al-Duafa, Risalat al-Huquq, and Mujam al-Ahadith al-Mutabara.")):
     return find_hadith(url)
+
+@app.get("/chain")
+async def chain(url: str = Query(description="Enter a thaqalayn.net/hadith URL to get chain analysis. All books supported except for: Man la Yahduruhu al-Faqih, Kitab al-Duafa, Risalat al-Huquq, and Mujam al-Ahadith al-Mutabara.")):
+    return get_chain(url)
