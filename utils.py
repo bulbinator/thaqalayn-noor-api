@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 import pymongo
 import requests
 from dotenv import load_dotenv, find_dotenv
@@ -17,22 +18,11 @@ def get_narrator(ravi_id, ravi_list):
             return ravi
 
 def get_chain(url):
-    doc = collection.find_one({"thaqURL": url}, {"_id": 0, "noorId": 1})
-    if not doc:
+    hadith = collection.find_one({"thaqURL": url}, {"_id": 0, "chains": 1})
+    if not hadith:
         print("No matching hadith found in database")
         return None
-
-    id = doc["noorId"]
-
-    url = f"https://hadith.inoor.ir/service/api/hadith/HadithRejalList/v2?hadithId={id}"
-    response = requests.get(url)
-
-    if response.status_code != 200:
-        print(f"Failed to call Noor API: {response.status_code}")
-        return None
-
-    data = response.json()
-    sanad_list = data.get("data", {}).get("sanadList", [])
+    sanad_list = hadith.get("chains", {}).get("data", {}).get("sanadList", [])
 
     if not sanad_list:
         print("No sanad list found")
@@ -56,7 +46,7 @@ def get_chain(url):
                 for ravi in ravi_list:
                     ravi_id = ravi.get("raviId")
                     narrator_name = ravi.get("hint")
-                    narrator = get_narrator(ravi_id, data.get("data", {}).get("raviList", []))
+                    narrator = get_narrator(ravi_id, hadith.get("chains", {}).get("data", {}).get("raviList", []))
                     narrator['name'] = narrator_name
                     narrators.append(narrator)
                 

@@ -17,7 +17,6 @@ app.add_middleware(
 )
 
 @app.get("/")
-@app.head("/")
 async def root():
     return {"message": "Go to /docs"}
 
