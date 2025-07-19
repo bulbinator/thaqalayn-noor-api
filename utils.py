@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 import pymongo
 import requests
 from dotenv import load_dotenv, find_dotenv
@@ -45,9 +46,14 @@ def get_chain(url):
         for item in sanad:
             ravi_list = item.get("raviList")
             title = item.get("title")
+            narrators = []
+
+            if item.get("type") == 1:
+                is_narrator = False
+            else:
+                is_narrator = True
 
             if ravi_list:
-                narrators = []
                 for ravi in ravi_list:
                     ravi_id = ravi.get("raviId")
                     narrator_name = ravi.get("hint")
@@ -55,17 +61,11 @@ def get_chain(url):
                     narrator['name'] = narrator_name
                     narrators.append(narrator)
                 
-                chain.append({
-                    "title": item.get("title"),
-                    "narrators": narrators,
-                    "is_narrator": True
-                })
-            
-            else:
-                chain.append({
-                    "title": item.get("title"),
-                    "is_narrator": False
-                })
+            chain.append({
+                "title": title,
+                "narrators": narrators,
+                "is_narrator": is_narrator
+            })
 
         chains.append(chain)
 
