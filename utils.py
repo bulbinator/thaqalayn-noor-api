@@ -1,4 +1,3 @@
-from fastapi import HTTPException
 import pymongo
 import requests
 from dotenv import load_dotenv, find_dotenv
